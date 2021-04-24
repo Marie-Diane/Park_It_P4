@@ -14,7 +14,7 @@ public class FareCalculatorService {
         }
 
         long diffMinutes = ChronoUnit.MINUTES.between(ticket.getInTime().toInstant(), ticket.getOutTime().toInstant());
-        
+        double price = 0;
         double coeff = 0;
 
         if (diffMinutes > 30) {
@@ -24,17 +24,22 @@ public class FareCalculatorService {
                 coeff = 0.75;
             }
         }
-        
+
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
-                ticket.setPrice(coeff * Fare.CAR_RATE_PER_HOUR);
+                price = coeff * Fare.CAR_RATE_PER_HOUR;
                 break;
             }
             case BIKE: {
-                ticket.setPrice(coeff * Fare.BIKE_RATE_PER_HOUR);
+                price = coeff * Fare.BIKE_RATE_PER_HOUR;
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }
+        if (ticket.isDiscounted()) {
+            price = price * 0.95;
+        }
+
+        ticket.setPrice((double) Math.round(price * 100) / 100);
     }
 }
