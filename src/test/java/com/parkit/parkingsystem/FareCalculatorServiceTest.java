@@ -9,7 +9,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class FareCalculatorServiceTest {
 
@@ -95,9 +95,8 @@ public class FareCalculatorServiceTest {
     }
 
     private Ticket commonTests(ParkingType parkingType, int minutes, Boolean isDiscounted) {
-        Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (minutes * 60 * 1000) );
-        Date outTime = new Date();
+        LocalDateTime inTime = LocalDateTime.now();
+        LocalDateTime outTime = LocalDateTime.now().plusMinutes(minutes);
         ParkingSpot parkingSpot = new ParkingSpot(1, parkingType,false);
 
         ticket.setInTime(inTime);
