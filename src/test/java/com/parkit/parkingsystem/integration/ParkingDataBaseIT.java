@@ -1,5 +1,6 @@
 package com.parkit.parkingsystem.integration;
 
+import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -56,31 +57,53 @@ public class ParkingDataBaseIT {
         dataBasePrepareService.clearDataBaseEntries();
     }
 
+    /**
+     * This test check that a ticket is actualy saved in DB and Parking table is updated with availability
+     */
     @Test
     public void testParkingACar(){
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, clockService);
         when(clockService.getCurrentDate()).thenReturn(TEST_DATE);
         parkingService.processIncomingVehicle();
-
         Ticket ticketTest = ticketDAO.getTicket("ABCDEF");
         assertNotNull(ticketTest);
         assertEquals("ABCDEF", ticketTest.getVehicleRegNumber());
         assertEquals(1, ticketTest.getParkingSpot().getId());
         assertEquals(ParkingType.CAR, ticketTest.getParkingSpot().getParkingType());
-        //TODO: check that a ticket is actualy saved in DB and Parking table is updated with availability
     }
 
+    /**
+     * This test check that the fare generated and out time are populated correctly in the database
+     */
     @Test
     public void testParkingLotExit(){
         testParkingACar();
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, clockService);
-        when(clockService.getCurrentDate()).thenReturn(TEST_DATE.plusMinutes(60));
+        when(clockService.getCurrentDate()).thenReturn(TEST_DATE.plusMinutes(120));
         parkingService.processExitingVehicle();
         Ticket ticketTest = ticketDAO.getTicket("ABCDEF");
         assertNotNull(ticketTest);
         assertEquals("ABCDEF", ticketTest.getVehicleRegNumber());
         assertNotNull(ticketTest.getOutTime());
-        assertEquals(1.5, ticketTest.getPrice());    
-        //TODO: check that the fare generated and out time are populated correctly in the database
+        double outPrice = (double) Math.round(2 * Fare.CAR_RATE_PER_HOUR * 100) / 100;
+        assertEquals(outPrice, ticketTest.getPrice());
+    }
+
+    /**
+     * This test check that fare calculate with less than one hour parking time and discounted
+     */
+    @Test
+    public void testParkingWithLessThanOneHourAndDiscounted() {
+        testParkingLotExit();
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, clockService);
+        when(clockService.getCurrentDate()).thenReturn(TEST_DATE.plusMinutes(30));
+        parkingService.processIncomingVehicle();
+        when(clockService.getCurrentDate()).thenReturn(TEST_DATE.plusMinutes(75));
+        parkingService.processExitingVehicle();
+        Ticket ticketTest = ticketDAO.getTicket("ABCDEF");
+        assertNotNull(ticketTest);
+        assertEquals("ABCDEF", ticketTest.getVehicleRegNumber());
+        double outPrice = (double) Math.round(0.95 * 0.75 * Fare.CAR_RATE_PER_HOUR * 100) / 100;
+        assertEquals(outPrice, ticketTest.getPrice());
     }
 }

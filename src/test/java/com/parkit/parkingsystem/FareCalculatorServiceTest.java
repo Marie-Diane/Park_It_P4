@@ -26,18 +26,27 @@ public class FareCalculatorServiceTest {
         ticket = new Ticket();
     }
 
+    /**
+     * This test check the fare for a car with one hour of parking
+     */
     @Test
     public void calculateFareCar(){
         fareCalculatorService.calculateFare(commonTests(ParkingType.CAR, 60, false));
         assertEquals(Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
     }
 
+    /**
+     * This test check the fare for a bike with one hour of parking
+     */
     @Test
     public void calculateFareBike(){
         fareCalculatorService.calculateFare(commonTests(ParkingType.BIKE, 60, false));
         assertEquals(Fare.BIKE_RATE_PER_HOUR, ticket.getPrice());
     }
 
+    /**
+     * This test check there is nullPointerException if vehicle type is null
+     */
     @Test
     public void calculateFareUnkownType(){
         assertThrows(
@@ -46,6 +55,9 @@ public class FareCalculatorServiceTest {
         );
     }
 
+    /**
+     * This test check there is illegalArgumentException when inTime is more than outTime
+     */
     @Test
     public void calculateFareBikeWithFutureInTime(){
         assertThrows(
@@ -54,6 +66,9 @@ public class FareCalculatorServiceTest {
         );
     }
 
+    /**
+     * This test check the fare for a bike with less than one hour of parking
+     */
     @Test
     public void calculateFareBikeWithLessThanOneHourParkingTime(){
         fareCalculatorService.calculateFare(commonTests(ParkingType.BIKE, 45, false));
@@ -61,6 +76,9 @@ public class FareCalculatorServiceTest {
         assertEquals(outPrice, ticket.getPrice());
     }
 
+    /**
+     * This test check the fare for a car with less than one hour of parking
+     */
     @Test
     public void calculateFareCarWithLessThanOneHourParkingTime(){
         fareCalculatorService.calculateFare(commonTests(ParkingType.CAR, 45, false));
@@ -68,18 +86,27 @@ public class FareCalculatorServiceTest {
         assertEquals(outPrice, ticket.getPrice());
     }
  
+    /**
+     * This test check the fare for a car with more than a day of parking
+     */
     @Test
     public void calculateFareCarWithMoreThanADayParkingTime(){
         fareCalculatorService.calculateFare(commonTests(ParkingType.CAR, (24*60), false));
         assertEquals(24 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
     }
 
+    /**
+     * This test check the fare for a car with less than thirty minutes of parking
+     */
     @Test
     public void calculateFareWithLessThanThirtyMinutesParkingTime(){
         fareCalculatorService.calculateFare(commonTests(ParkingType.CAR, 30, false));
         assertEquals(0 * Fare.CAR_RATE_PER_HOUR, ticket.getPrice());
     }
     
+    /**
+     * This test check the fare for a car with one hour of parking and five percent discount
+     */
     @Test
     public void calculateFareWith5PercentDiscountParkingTime(){
         fareCalculatorService.calculateFare(commonTests(ParkingType.CAR, 60, true));
@@ -87,6 +114,9 @@ public class FareCalculatorServiceTest {
         assertEquals(outPrice, ticket.getPrice());
     }
 
+    /**
+     * This test check the fare for a car with less than one hour of parking and five percent discount
+     */
     @Test
     public void calculateFareWith5PercentDiscountAndLessThanOneHourParkingTime(){
         fareCalculatorService.calculateFare(commonTests(ParkingType.CAR, 45, true));
