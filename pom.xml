@@ -8,6 +8,19 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <name>Park'it</name>
+    <description>It's a parking application that allows you to allocate parking space, and calculate a fare based on parking time and vehicle type.</description>
+    <organization>
+        <name>FuzeScrum</name>
+    </organization>
+    <developers>
+        <developer>
+            <name>Marie-Diane PERCHEZ</name>
+            <email>mariediane.perchez@fuzescrum.com</email>
+            <organization>FuzeScrum</organization>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>15</maven.compiler.source>
