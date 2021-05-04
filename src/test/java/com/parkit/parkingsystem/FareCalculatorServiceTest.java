@@ -126,7 +126,7 @@ public class FareCalculatorServiceTest {
 
     private Ticket commonTests(ParkingType parkingType, int minutes, Boolean isDiscounted) {
         LocalDateTime inTime = LocalDateTime.now();
-        LocalDateTime outTime = LocalDateTime.now().plusMinutes(minutes);
+        LocalDateTime outTime = inTime.plusMinutes(minutes);
         ParkingSpot parkingSpot = new ParkingSpot(1, parkingType,false);
 
         ticket.setInTime(inTime);

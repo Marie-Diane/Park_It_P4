@@ -61,12 +61,12 @@ public class ParkingServiceTest {
     }
 
     /**
-     * This test check that updateParking() is not called
+     * This test check that updateParking() is not called if the ticket has not been updated
      * 
      * @throws Exception
      */
     @Test
-    public void processExitingVehicleTestWithTicketNotExisting() throws Exception{
+    public void processExitingVehicleTestWithTicketNotUpdating() throws Exception{
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         Ticket ticket = mockTicket();
         when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
@@ -76,7 +76,7 @@ public class ParkingServiceTest {
     }
 
     /**
-     * This test check that updateParking not called if ticket doesn't exist
+     * This test check that updateParking() not called if ticket doesn't exist
      * 
      * @throws Exception
      */

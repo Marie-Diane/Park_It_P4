@@ -19,7 +19,7 @@ public class FareCalculatorService {
 
         if (diffMinutes > 30) {
             if (diffMinutes >=60) {
-                coeff = diffMinutes / 60;
+                coeff = (double) diffMinutes / 60;
             } else {
                 coeff = 0.75;
             }
